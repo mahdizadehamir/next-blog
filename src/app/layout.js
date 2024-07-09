@@ -13,7 +13,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl">
-      <body className='container bg-slate-600 text-white mx-auto p-2 my-0 h-screen flex flex-col justify-between'>
+      <body className="container font-yekan dark:bg-[#141414] bg-[#e5e5e5] dark:text-white mx-auto p-2 my-0 h-screen flex flex-col justify-between">
         <Navbar />
         {children}
         <Footer />

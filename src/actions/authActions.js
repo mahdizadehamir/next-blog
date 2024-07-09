@@ -1,5 +1,6 @@
 'use server';
 import { signIn, signOut } from '@/auth/auth';
+import { AuthError } from 'next-auth';
 
 export const githubLoginHandler = async (previousState, formData) => {
   try {
@@ -19,9 +20,12 @@ export const credentialLoginHandler = async (previousState, formData) => {
     return { error: 'تمامی فیلد ها را پر کنید' };
   }
   try {
-    await signIn('credentials', { username, password });
+    await signIn('credentials', { username, password, redirect: true, redirectTo: '/'  });
   } catch (error) {
-    console.log(error)
-    return { error: `${error}` };
+    console.log(error);
+    if (error instanceof AuthError) {
+      return { error: 'نام کاربری یا رمز عبور اشتباه است.' };
+    }
+    throw error;
   }
 };

@@ -1,8 +1,14 @@
 'use client';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+//components
+import Spinner from '@/components/Spinner/Spinner';
+//icons
+import { RxHamburgerMenu } from 'react-icons/rx';
+import { MdClose } from 'react-icons/md';
+//dynamic import
 const DynamicNavLink = dynamic(() => import('../NavLinks/NavLink'), {
-  loading: () => <div>در حال بارگزاری</div>,
+  loading: () => <Spinner />,
 });
 const links = [
   {
@@ -27,10 +33,10 @@ function Links({ logOutHandler, session }) {
   const toggleSideBar = () => {
     setSidebarOpen((prevState) => !prevState);
   };
-  const isAdmin = true;
+  const isAdmin = session?.user?.isAdmin;
   return (
     <div>
-      <ul className="flex flex-row gap-3 text-xs lg:text-base items-center max-md:hidden ">
+      <ul className="flex flex-row gap-3 text-xs lg:text-base items-center max-md:hidden mt-1 ">
         {links.map((link) => (
           <DynamicNavLink key={link.title} path={link.path} title={link.title} />
         ))}
@@ -50,13 +56,17 @@ function Links({ logOutHandler, session }) {
           className="z-10 max-md:block hidden  text-white cursor-pointer  "
           onClick={toggleSideBar}
         >
-          Menu
+          {sideBarOpen ? (
+            <MdClose className="text-4xl hover:text-gray-600 border p-1 rounded-lg cursor-pointer hover:bg-slate-300 dark:hover:bg-blue-700 dark:hover:text-white transition-all ease-in duration-100" />
+          ) : (
+            <RxHamburgerMenu className="text-4xl hover:text-gray-600 border p-1 rounded-lg cursor-pointer hover:bg-slate-300 dark:hover:bg-blue-700 dark:hover:text-white transition-all ease-in duration-100 " />
+          )}
         </button>
         {sideBarOpen && (
           <div
-            className={` max-md:absolute h-[calc(100%-70px)] right-2 top-[70px] w-1/2 bg-blue-900  `}
+            className={` max-md:absolute h-[calc(100%-70px)] right-2 top-[70px] w-1/2 bg-slate-500 dark:bg-blue-900  `}
           >
-            <ul className="flex flex-col gap-4 items-center text-white justify-center h-full ">
+            <ul className="flex flex-col gap-10 items-center text-white justify-center h-full ">
               {links.map((link) => (
                 <DynamicNavLink key={link.title} path={link.path} title={link.title} />
               ))}

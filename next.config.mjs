@@ -5,13 +5,18 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "xsgames.co",
+        protocol: 'https',
+        hostname: 'imgupload.storage.c2.liara.space',
         // ...
       },
       {
-        protocol: "https",
-        hostname: "avatars.githubusercontent.com",
+        protocol: 'https',
+        hostname: 'next-blog.liara.run/api/auth/session',
+        // ...
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
         // ...
       },
     ],

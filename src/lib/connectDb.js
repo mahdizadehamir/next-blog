@@ -7,7 +7,7 @@ async function connectDb() {
       console.log('Already connected');
       return;
     }
-    await mongoose.connect(process.env.MONGO_LINK);
+    await mongoose.connect(process.env.MONGO_LINK, { authSource: 'admin' });
     connection.isConnected = mongoose.connections[0].readyState;
     console.log('Connected to db');
   } catch (error) {

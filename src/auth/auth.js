@@ -4,6 +4,8 @@ import NextAuth from 'next-auth';
 import GitHub from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
 import { comparePassword } from '@/utils/functions';
+import { authConfig } from './auth.config';
+
 const login = async (credentials) => {
   const { username, password } = credentials;
   let user = null;
@@ -23,8 +25,12 @@ const login = async (credentials) => {
   }
 };
 export const config = {
+  ...authConfig,
   providers: [
-    GitHub,
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID,
+      clientSecret: process.env.AUTH_GITHUB_SECRET,
+    }),
     Credentials({
       authorize: async (credentials) => {
         try {
@@ -42,6 +48,7 @@ export const config = {
       if (account.provider === 'github') {
         try {
           await connectDb();
+
           const user = await User.findOne({ email: profile.email });
           //existing user
           if (!user) {
@@ -58,9 +65,11 @@ export const config = {
           console.log(error);
           return false;
         }
+        return true;
       }
-      return true;
     },
+
+    ...authConfig.callbacks,
   },
 };
 export const { auth, signIn, signOut, handlers } = NextAuth(config);

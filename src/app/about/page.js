@@ -6,7 +6,7 @@ export const generateMetadata = ({ pramas }) => {
 };
 function About() {
   return (
-    <main class="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8">
       <section className="bg-slate-900 p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-4">معرفی وبلاگ</h2>
         <p className="mb-4">

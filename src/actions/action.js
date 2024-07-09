@@ -1,12 +1,56 @@
 'use server';
 import connectDb from '@/lib/connectDb';
+import { Post } from '@/models/Post';
 import { User } from '@/models/User';
 import { hashPassword } from '@/utils/functions';
+import { revalidatePath } from 'next/cache';
 
-const addPost = async (formData) => {
-  const { title, desc, slug, userId } = Object.fromEntries(formData.entries());
-  console.log(title, desc, slug, userId);
+const addPost = async (prevState, formData) => {
+  const { title, desc, slug, userId, img } = Object.fromEntries(formData.entries());
+  console.log(title, desc, slug, userId, img);
+  try {
+    await connectDb();
+    const newPost = await new Post({
+      title,
+      desc,
+      slug,
+      userId,
+      img,
+    });
+    await newPost.save();
+    console.log('saved to db');
+    revalidatePath('/blog');
+  } catch (error) {
+    console.log(error);
+    return { error: 'something went wrong' };
+  }
 };
+const deletePost = async (prevState, formData) => {
+  const { postId } = Object.fromEntries(formData.entries());
+  try {
+    await connectDb();
+    await Post.findByIdAndDelete(postId);
+    revalidatePath('/blog');
+    revalidatePath('/admin');
+  } catch (error) {
+    console.log(error);
+    return { error: 'something went wrong in deleting post' };
+  }
+};
+
+const deleteUser = async (prevState, formData) => {
+  const { userId } = Object.fromEntries(formData.entries());
+  try {
+    await connectDb();
+    await Post.deleteMany({ userId: userId });
+    await User.findByIdAndDelete(userId);
+    revalidatePath('/admin');
+  } catch (error) {
+    console.log(error);
+    return { error: 'something went wrong in deleting post' };
+  }
+};
+
 const addUser = async (previousState, formData) => {
   const { username, email, password, confirmPassword } = Object.fromEntries(formData);
   await connectDb();
@@ -39,4 +83,4 @@ const addUser = async (previousState, formData) => {
   await newUser.save();
   return { success: 'یوزر ایجاد شد' };
 };
-export { addPost, addUser };
+export { addPost, addUser, deletePost, deleteUser };

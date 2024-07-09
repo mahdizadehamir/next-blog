@@ -40,7 +40,7 @@ function RegisterForm() {
           name="confirmPassword"
         />
         <span className="text-red-500">{state?.error}</span>
-        <SubmitButton />
+        <SubmitButton buttonLabel={'ثبت نام'} />
       </form>
     </div>
   );
